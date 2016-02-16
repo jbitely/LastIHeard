@@ -2,8 +2,10 @@
   border: 1px solid black;
 }
 
+.options {
+  padding: 10px 0;
+}
+
 .artist {
-  fill: #FB00DC;
-  background: #FB00DC;
   stroke: black;
 }

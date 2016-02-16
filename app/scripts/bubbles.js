@@ -1,5 +1,15 @@
-// container settings
+// color scale based on colorbrewer
+var color = d3.scale.ordinal()
+  .range(colorbrewer.PuRd[9]);
+
 var diameter = 600;
+
+
+
+// d3.json(apiurl + '?' + 'method=' + apimethod + '&user=' + username + '&format=json' + '&api_key=' + apikey, function(error, response){
+//   var remotejson = response;
+//   console.log(remotejson);
+// })
 
 // some mock JSON data for now
 var json = {
@@ -33,13 +43,9 @@ var json = {
     "Nathaniel Rateliff & the Night Sweats" : "5",
     "Nick Cave & The Bad Seeds" : "5"
   }
-}
-var remotejson = {};
+};
 
-d3.json('http://ws.audioscrobbler.com/2.0/?method=user.getTopArtists&user=roboticbears&api_key=0b7b1045b71139071bd6dfa010bf3de9&format=json&period=12month', function(error, response){
-  remotejson = response;
-  console.log(remotejson);
-})
+
 
 
 // viz stage
@@ -54,21 +60,22 @@ var bubble = d3.layout.pack()
   .value(function(d){
     return d.size;
   })
-  .padding(3)
+  .padding(3);
 
 // generate data
 var nodes = bubble.nodes(processData(json))
   .filter(function(d){ //filter out outer bubble (any node w/o parent);
     return d.parent;
-  })
+  });
 
 var vis = container.selectAll('circle')
-  .data(nodes)
+  .data(nodes);
 
 vis.enter().append('circle')
   .attr('transform', function(d) {return 'translate(' + d.x + ',' + d.y + ')';})
   .attr('r', function(d) {return d.r;})
-  .attr('class', 'artist');
+  .attr('class', 'artist')
+  .style('fill', function(d){return color(d.size);});
 
 vis.enter().append('text')
   .attr('transform', function(d) {return 'translate(' + d.x + ',' + d.y + ')';})
@@ -84,14 +91,14 @@ vis.enter().append('text')
   .text(function(d){
     var text = d.name.substring(0, d.r /3);
     return text;
-  })
+  });
 
 // build data into children array
 function processData(data) {
   var obj = data.artists;
   var newDataSet = [];
   for(var prop in obj) {
-    newDataSet.push({name: prop, size: obj[prop]})
+    newDataSet.push({name: prop, size: obj[prop]});
   }
   return {children: newDataSet};
 }
