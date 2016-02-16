@@ -2,7 +2,6 @@
 var diameter = 600;
 
 // some mock JSON data for now
-
 var json = {
   "artists" : {
     "M83" : "27",
@@ -35,6 +34,13 @@ var json = {
     "Nick Cave & The Bad Seeds" : "5"
   }
 }
+var remotejson = {};
+
+d3.json('http://ws.audioscrobbler.com/2.0/?method=user.getTopArtists&user=roboticbears&api_key=0b7b1045b71139071bd6dfa010bf3de9&format=json&period=12month', function(error, response){
+  remotejson = response;
+  console.log(remotejson);
+})
+
 
 // viz stage
 var container = d3.select('#viz').append('svg')
