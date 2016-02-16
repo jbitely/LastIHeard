@@ -1,0 +1,9 @@
+.container {
+  border: 1px solid black;
+}
+
+.artist {
+  fill: #FB00DC;
+  background: #FB00DC;
+  stroke: black;
+}
