@@ -6,17 +6,36 @@ var diameter = 600;
 var json = {
   "artists" : {
     "M83" : "27",
-    "Dance With The Dead" : "19",
-    "Carpenter Brut" : "18",
+    "Dance With The Dead" : "36",
+    "Carpenter Brut" : "41",
     "Ennio Morricone" : "15",
     "Kanye West" : "10",
     "The Shirelles" : "7",
     "The Mamas & the Papas" : "5",
-    "Sigur Rós" : "4",
+    "Sigur Rós" : "11",
     "The Impressions" : "4",
-    "Buddy Holly" : "3"
+    "Buddy Holly" : "3",
+    "Dead Man's Bones" : "17",
+    "Lykke Li" : "14",
+    "The Kinks" : "14",
+    "Girl Talk" : "13",
+    "Spoon" : "12",
+    "Florence + the Machine" : "11",
+    "Sleigh Bells" : "11",
+    "Hall & Oates" : "10",
+    "Kenny Loggins" : "8",
+    "Redbone" : "8",
+    "Lana Del Rey" : "7",
+    "Pixies" : "7",
+    "Starfucker" : "7",
+    "Daniel Johnston" : "6",
+    "Kavinsky" : "6",
+    "Cyndi Lauper" : "5",
+    "Nathaniel Rateliff & the Night Sweats" : "5",
+    "Nick Cave & The Bad Seeds" : "5"
   }
 }
+
 // viz stage
 var container = d3.select('#viz').append('svg')
   .attr('height', diameter)
@@ -47,8 +66,19 @@ vis.enter().append('circle')
 
 vis.enter().append('text')
   .attr('transform', function(d) {return 'translate(' + d.x + ',' + d.y + ')';})
-  .text(function(d) { return d.name})
   .attr('text-anchor', 'middle')
+  .attr('alignment-baseline', 'middle')
+  .style('font-size', function(d){
+    var len = d.name.substring(0, d.r / 3).length;
+    var size = d.r/4;
+    size *= 10/len;
+    size += 1;
+    return Math.round(size)+'px';
+  })
+  .text(function(d){
+    var text = d.name.substring(0, d.r /3);
+    return text;
+  })
 
 // build data into children array
 function processData(data) {
