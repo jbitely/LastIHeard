@@ -1,0 +1,10 @@
+{
+  "name": "last-i-heard",
+  "version": "0.0.1",
+  "private": true,
+  "author": "Justin Bitely <jbitely@gmail.com>",
+  "description": "a visualizer for last.fm listening data",
+  "scripts": {},
+  "dependencies": {},
+  "devDependencies": {}
+}
