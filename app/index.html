@@ -7,8 +7,23 @@
   </head>
     <body>
       <h1>Last I Heard</h1>
+      <h3>A visualizer for your Last.fm top artists</h3>
       <form class="options">
-        <input name="username" type="text" placeholder="Enter Last.fm username" />
+        <input name="username" size="30" type="text" placeholder="Enter your Last.fm username" />
+        <select name="numresults">
+          <option label="Top 10" value="10"></option>
+          <option label="Top 25" value="25" selected></option>
+          <option label="Top 50" value="50"></option>
+          <option label="Top 100" value="100"></option>
+        </select>
+        <select name="period">
+          <option label="All Time" value="overall"></option>
+          <option label="Last year" value="12month"></option>
+          <option label="Last 6 months" value="6month"></option>
+          <option label="Last 90 days" value="3month" selected></option>
+          <option label="Last 30 days" value="1month"></option>
+          <option label="Last 7 days" value="7day"></option>
+        </select>
         <button type="submit">Submit</button>
       </form>
       <section id="viz"></section>

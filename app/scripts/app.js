@@ -34,15 +34,25 @@ var json = {
 // construct httprequest - refactor option object?
 var apiurl = 'http://ws.audioscrobbler.com/2.0/';
 var apikey = '0b7b1045b71139071bd6dfa010bf3de9';
-var username = ''; // <--- get from form
 var apimethod = 'user.getTopArtists'; // <--- get from form
-var apiperiod = '12month'; // <--- get from form
+
 
 var getOptions = function(){
   // get username from form
-  username = this.username.value;
-  // set username in request string
-  requestStr = apiurl + '?' + 'method=' + apimethod + '&user=' + username + '&format=json' + '&api_key=' + apikey;
+  var username = this.username.value;
+  // get time period from form
+  var apiperiod = this.period.value;
+  // get number of results from form
+  var apilimit = this.numresults.value;
+  // set options in request string
+  requestStr = apiurl + '?' +
+    'method=' + apimethod +
+    '&user=' + username +
+    '&period=' + apiperiod +
+    '&limit=' + apilimit +
+    '&format=json' +
+    '&api_key=' + apikey;
+
   // api call
   fetchData(requestStr);
   return false;

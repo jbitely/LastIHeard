@@ -55,7 +55,7 @@ var bubble = d3.layout.pack()
   .value(function(d){
     return d.size;
   })
-  .padding(3);
+  .padding(4);
 
 // generate data
 var buildBubbles = function(json){
@@ -83,7 +83,7 @@ var buildBubbles = function(json){
     .style('font-size', function(d){
       var len = d.name.substring(0, d.r / 3).length;
       var size = d.r/4;
-      size *= 10/len;
+      size *= 9/len;
       size += 1;
       return Math.round(size)+'px';
     })
