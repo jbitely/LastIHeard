@@ -66,7 +66,6 @@ var fetchData = function(requestStr){
     remotejson = response;
     // call our chart builder here
     buildBubbles(remotejson.topartists.artist);
-    console.log(remotejson);
   });
 };
 

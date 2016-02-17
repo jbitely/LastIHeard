@@ -1,7 +1,4 @@
-// color scale based on colorbrewer
-// var color = d3.scale.ordinal()
-//   .range(colorbrewer.PuRd[9]);
-
+// generate random colors
 // http://bl.ocks.org/jdarling/06019d16cb5fd6795edf
 // Adapted from http://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/
 var randomColor = (function(){
@@ -41,13 +38,14 @@ var randomColor = (function(){
 })();
 
 // stage setup
-var diameter = 600;
+var diameter = 700;
 
 // viz stage
 var container = d3.select('#viz').append('svg')
   .attr('height', diameter)
   .attr('width', diameter)
-  .attr('class', 'container');
+  .attr('class', 'container')
+  .append('g');
 
 // setup pack layout
 var bubble = d3.layout.pack()
@@ -55,7 +53,7 @@ var bubble = d3.layout.pack()
   .value(function(d){
     return d.size;
   })
-  .padding(4);
+  .padding(3);
 
 // generate data
 var buildBubbles = function(json){
@@ -64,49 +62,57 @@ var buildBubbles = function(json){
       return d.parent;
     });
 
-  var vis = container.selectAll('circle')
+  var group = container.selectAll('.bubble')
     .data(nodes);
 
-  var labels = container.selectAll('text')
-    .data(nodes);
+  var groupEnter = group.enter()
+    .append('g')
+    .attr('class', 'bubble');
+    // .attr('transform', function(d) {return 'translate(' + d.x + ',' + d.y + ')';});
 
-  vis.enter().append('circle')
-    .attr('transform', function(d) {return 'translate(' + d.x + ',' + d.y + ')';})
+  groupEnter.append('circle')
     .attr('r', function(d) {return d.r;})
-    .attr('class', 'artist')
-    .style('fill', 'white');
 
-  labels.enter().append('text')
-    .attr('transform', function(d) {return 'translate(' + d.x + ',' + d.y + ')';})
+  groupEnter.append('text')
     .attr('text-anchor', 'middle')
     .attr('alignment-baseline', 'middle')
-    .style('font-size', function(d){
-      var len = d.name.substring(0, d.r / 3).length;
-      var size = d.r/4;
-      size *= 9/len;
-      size += 1;
-      return Math.round(size)+'px';
+    .text(function(d){
+      var text = d.name;
+      return text;
     })
-    .text(function(d){
-      var text = d.name.substring(0, d.r /3);
-      return text;
+    // font sizing http://stackoverflow.com/questions/20115090/d3-js-auto-font-sizing-based-on-nodes-individual-radius-diameter
+    .style('font-size', '1px')
+    .each(getSize)
+    .style('font-size', function(d){return d.scale + 'px';});
+
+  group.transition()
+    .duration(1000)
+    .ease('cubic')
+    .attr('transform', function(d) {return 'translate(' + d.x + ',' + d.y + ')';});
+
+  group.select('text')
+    .text('');
+
+  group.select('circle').transition()
+    .duration(1000)
+    .attr('r', function(d) {return d.r;})
+    .style('fill', randomColor)
+    .each('end', function(){
+      group.select('text')
+        .style('fill', randomColor)
+        .text(function(d){
+          var text = d.name;
+          return text;
+        })
+        .style('font-size', '1px')
+        .transition()
+        .duration(1000)
+        .each(getSize)
+        .style('font-size', function(d){return d.scale + 'px';});
     });
 
-  vis.transition().duration(1000)
-    .attr('transform', function(d) {return 'translate(' + d.x + ',' + d.y + ')';})
-    .attr('r', function(d) {return d.r;})
-    .style('fill', randomColor);
+  group.exit().remove();
 
-  labels.transition().duration(1000)
-    .attr('transform', function(d) {return 'translate(' + d.x + ',' + d.y + ')';})
-    .attr('r', function(d) {return d.r;})
-    .text(function(d){
-      var text = d.name.substring(0, d.r /3);
-      return text;
-    });
-
-  vis.exit().remove();
-  labels.exit().remove();
 };
 
 // build data into children array
@@ -116,4 +122,12 @@ function processData(data) {
     newDataSet.push({name: data[i].name, size: data[i].playcount});
   }
   return {children: newDataSet};
+}
+
+// get bounding boxes
+function getSize(d) {
+  var bbox = this.getBBox(),
+    cbbox = this.parentNode.getBBox(),
+    scale = Math.min((cbbox.width/bbox.width)-2, cbbox.height/bbox.height);
+  d.scale = scale;
 }
